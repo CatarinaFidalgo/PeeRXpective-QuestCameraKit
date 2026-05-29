@@ -1,0 +1,128 @@
+using System;
+using System.IO;
+using UnityEngine;
+
+#if UNITY_ANDROID
+using UnityEngine.Android; // <--- Needed for Permission class
+#endif
+
+public class DataCollection : MonoBehaviour
+{
+    public static DataCollection Instance;  // Singleton access
+    public RoleControl rc;                  // assign in Inspector
+
+    private string folderPath;
+    private string filePath;
+    private string participantID;
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    void Start()
+    {
+        // Request storage permission on Android
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        {
+            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+        }
+#endif
+
+        // Get participant ID from RoleControl (fallback if missing)
+        participantID = rc != null ? rc.selectedRole.ToString() : "UnknownParticipant";
+
+        // // On Quest, persistentDataPath is writable and persistent
+        // folderPath = Path.Combine(Application.persistentDataPath, "DataCollection");
+        // //folderPath = Path.Combine(Application.dataPath, "DataCollection");
+
+        // Path for CSVs
+#if UNITY_ANDROID && !UNITY_EDITOR
+        folderPath = Path.Combine("/sdcard/Documents", "DataCollection");
+#else
+        folderPath = Path.Combine(Application.persistentDataPath, "DataCollection");
+#endif
+        
+        CreateFolder(folderPath);
+
+        Debug.Log("DataCollection folder path: " + folderPath);
+
+        string timestamp = DateTime.Now.ToString("MM_dd_HH_mm");
+        filePath = Path.Combine(folderPath, $"{timestamp}__{participantID}__ScreenOrganizationLogs.csv");
+
+        Debug.Log("DataCollection file path: " + filePath);
+
+        string[] header = {
+            "TimeStamp", "ParticipantID", "ObjectName",
+            "PosX", "PosY", "PosZ",
+            "RotX", "RotY", "RotZ",
+            "Scale"
+        };
+
+        CreateFile(filePath, header);
+    }
+
+
+    public void LogTransformChange(string objectName, Vector3 position, Vector3 rotation, float scale)
+    {
+        string[] data = {
+            DateTime.Now.ToString("HH:mm:ss.fff"),
+            "id_" + participantID,
+            "view_" + objectName,
+            position.x.ToString("F2"),
+            position.y.ToString("F2"),
+            position.z.ToString("F2"),
+            rotation.x.ToString("F2"),
+            rotation.y.ToString("F2"),
+            rotation.z.ToString("F2"),
+            scale.ToString("F2")
+        };
+
+        Debug.Log($"Logging Transform Change: {string.Join(", ", data)}");
+        AppendLine(filePath, data);
+    }
+
+    /// <summary>
+    ///   Creates a folder if it doesn't exist already.
+    /// </summary>
+    /// <param name="path"></param>
+    private void CreateFolder(string path)
+    {
+        var folders = path.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+        string currentPath = "/";
+        foreach (var folder in folders)
+        {
+            currentPath = Path.Combine(currentPath, folder);
+            if (!Directory.Exists(currentPath))
+            {
+                Debug.Log("Creating folder: " + currentPath);
+                Directory.CreateDirectory(currentPath);
+                Debug.Log("Created folder: " + currentPath);
+            }
+        }
+        Debug.Log("Created folder at: " + path);
+    }
+
+    private void CreateFile(string path, string[] header)
+    {
+        if (!File.Exists(path))
+        {
+            using (StreamWriter writer = new StreamWriter(path))
+            {
+                writer.WriteLine(string.Join(";", header));
+            }
+        }
+
+        Debug.Log("Created file at: " + path);
+    }
+
+    private void AppendLine(string path, string[] data)
+    {
+        using (StreamWriter writer = new StreamWriter(path, true))
+        {
+            writer.WriteLine(string.Join(";", data));
+        }
+    }
+}
