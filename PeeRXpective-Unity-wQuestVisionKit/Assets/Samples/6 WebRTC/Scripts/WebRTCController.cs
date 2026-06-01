@@ -56,7 +56,8 @@ namespace QuestCameraKit.WebRTC {
             }
 
 #if UNITY_EDITOR
-            if (Input.GetKeyUp(KeyCode.Space)) {
+            //if (Input.GetKeyUp(KeyCode.Space)) {
+            if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.spaceKey.wasReleasedThisFrame) {                    
                 _webRTCConnection.StartVideoTransmission();
                 Debug.Log("[CAT] [Editor] Spacebar pressed. Starting mock up transmission.");
             }

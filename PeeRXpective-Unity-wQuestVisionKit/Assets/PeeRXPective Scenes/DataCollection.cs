@@ -9,7 +9,9 @@ using UnityEngine.Android; // <--- Needed for Permission class
 public class DataCollection : MonoBehaviour
 {
     public static DataCollection Instance;  // Singleton access
-    public RoleControl rc;                  // assign in Inspector
+    public enum Role { E, T1, T2, T3, T4 }
+    public Role role;
+    public string pID;
 
     private string folderPath;
     private string filePath;
@@ -24,35 +26,31 @@ public class DataCollection : MonoBehaviour
     void Start()
     {
         // Request storage permission on Android
-#if UNITY_ANDROID && !UNITY_EDITOR
-        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        {
-            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
-        }
-#endif
+    #if UNITY_ANDROID && !UNITY_EDITOR
+            if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+            {
+                Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+            }
+    #endif
 
-        // Get participant ID from RoleControl (fallback if missing)
-        participantID = rc != null ? rc.selectedRole.ToString() : "UnknownParticipant";
+            participantID = role.ToString() + "_pid" + pID;
 
-        // // On Quest, persistentDataPath is writable and persistent
-        // folderPath = Path.Combine(Application.persistentDataPath, "DataCollection");
-        // //folderPath = Path.Combine(Application.dataPath, "DataCollection");
 
-        // Path for CSVs
-#if UNITY_ANDROID && !UNITY_EDITOR
-        folderPath = Path.Combine("/sdcard/Documents", "DataCollection");
-#else
-        folderPath = Path.Combine(Application.persistentDataPath, "DataCollection");
-#endif
+            // Path for CSVs
+    #if UNITY_ANDROID && !UNITY_EDITOR
+            folderPath = Path.Combine("/sdcard/Documents", "DataCollection");
+    #else
+            folderPath = Path.Combine(Application.persistentDataPath, "DataCollection");
+    #endif
         
         CreateFolder(folderPath);
 
-        Debug.Log("DataCollection folder path: " + folderPath);
+        //Debug.Log("DataCollection folder path: " + folderPath);
 
         string timestamp = DateTime.Now.ToString("MM_dd_HH_mm");
         filePath = Path.Combine(folderPath, $"{timestamp}__{participantID}__ScreenOrganizationLogs.csv");
 
-        Debug.Log("DataCollection file path: " + filePath);
+        //Debug.Log("DataCollection file path: " + filePath);
 
         string[] header = {
             "TimeStamp", "ParticipantID", "ObjectName",
@@ -91,18 +89,44 @@ public class DataCollection : MonoBehaviour
     private void CreateFolder(string path)
     {
         var folders = path.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-        string currentPath = "/";
+
+        /***   prev ***/
+        // string currentPath = "/";
+
+        // Determine the correct starting root based on the operating system
+        string currentPath = "";
+
+        #if UNITY_ANDROID && !UNITY_EDITOR
+            currentPath = "/"; // Keep the Android root slash
+        #else
+                // On Windows, the first element will be "C:" -> let it be the root without a leading slash
+                if (folders.Length > 0 && folders[0].Contains(":"))
+                {
+                    currentPath = folders[0] + "\\";
+                    // Remove the drive letter from our loop array so we don't process it twice
+                    string[] remainingFolders = new string[folders.Length - 1];
+                    Array.Copy(folders, 1, remainingFolders, 0, folders.Length - 1);
+                    folders = remainingFolders;
+                }
+                else
+                {
+                    currentPath = "/";
+                }
+        #endif
+
+        /******************/
+
         foreach (var folder in folders)
         {
             currentPath = Path.Combine(currentPath, folder);
             if (!Directory.Exists(currentPath))
             {
-                Debug.Log("Creating folder: " + currentPath);
+                //Debug.Log("Creating folder: " + currentPath);
                 Directory.CreateDirectory(currentPath);
-                Debug.Log("Created folder: " + currentPath);
+                //Debug.Log("Created folder: " + currentPath);
             }
         }
-        Debug.Log("Created folder at: " + path);
+        Debug.Log("Folder created at: " + path);
     }
 
     private void CreateFile(string path, string[] header)
@@ -115,7 +139,7 @@ public class DataCollection : MonoBehaviour
             }
         }
 
-        Debug.Log("Created file at: " + path);
+        Debug.Log("File created at: " + path);
     }
 
     private void AppendLine(string path, string[] data)
