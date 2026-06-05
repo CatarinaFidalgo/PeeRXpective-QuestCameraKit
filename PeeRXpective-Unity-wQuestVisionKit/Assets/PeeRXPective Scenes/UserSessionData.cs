@@ -10,7 +10,7 @@ public class UserSessionData : MonoBehaviour
     // This is the formatted string your WebRTC connection will use
     public string FormattedPeerId => $"PeerID_{UserName}_{UserColor}";
 
-    private void Awake()
+   /* private void Awake()
     {
         if (Instance == null)
         {
@@ -21,5 +21,5 @@ public class UserSessionData : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
+    }*/
 }

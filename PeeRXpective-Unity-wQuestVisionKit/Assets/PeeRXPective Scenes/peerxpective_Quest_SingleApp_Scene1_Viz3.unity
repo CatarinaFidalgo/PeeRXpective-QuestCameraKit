@@ -487,7 +487,7 @@ GameObject:
   - component: {fileID: 557677175}
   - component: {fileID: 557677174}
   m_Layer: 8
-  m_Name: StreamingRawImage
+  m_Name: StreamingPreviewRawImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -525,7 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6226415, g: 0.30740473, b: 0.30740473, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -1219,6 +1219,9 @@ GameObject:
   - component: {fileID: 979470610}
   - component: {fileID: 979470609}
   - component: {fileID: 979470608}
+  - component: {fileID: 979470613}
+  - component: {fileID: 979470612}
+  - component: {fileID: 979470611}
   m_Layer: 8
   m_Name: WebRTC Webcam Canvas
   m_TagString: Untagged
@@ -1248,7 +1251,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &979470609
 Canvas:
   m_ObjectHideFlags: 0
@@ -1258,7 +1261,7 @@ Canvas:
   m_GameObject: {fileID: 979470606}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 2
   m_Camera: {fileID: 135406155566937053}
   m_PlaneDistance: 0.02
   m_PixelPerfect: 0
@@ -1280,8 +1283,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 979470606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.2217}
+  m_LocalScale: {x: 0.0001, y: 0.0001, z: 0.0001}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 557677173}
@@ -1289,9 +1292,69 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.4133, y: 0.0362}
+  m_SizeDelta: {x: 1755, y: 973.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &979470611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979470606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6fd9bf414e0530478ce9947ab6c699f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headTransform: {fileID: 1286556237}
+  distanceFromHead: 0.3
+  y_Offset: -1.02
+  x_Offset: 0.5
+  fixedPos: 1
+  moveLerpSpeed: 7
+  rightController: {fileID: 1288229981}
+--- !u!114 &979470612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979470606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4f2e9d71d01c4e93cfaa05d9ec013, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneCamera: {fileID: 1286556238}
+  rightController: {fileID: 1288229981}
+  touchRadius: 0.15
+  moveLerpSpeed: 7
+  scaleSpeed: 1
+  intersect: 0
+  highlightGraphic: {fileID: 557677174}
+  direction: {x: 0, y: 0, z: 0}
+--- !u!65 &979470613
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979470606}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &990968346
 GameObject:
   m_ObjectHideFlags: 0
@@ -2444,8 +2507,8 @@ Camera:
   m_GameObject: {fileID: 2185030267268022496}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2650,14 +2713,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2194691001023323719}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc66cda212b8ad74aa1e2daf58a8ec0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ndiSetName: 
-  textmp: {fileID: 1547940529776304390}
   labelled: 0
+  connected: 0
+  webRTCConnection: {fileID: 6985653293374303736}
 --- !u!114 &1053704281880648447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2774,14 +2837,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1350413174038520174}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc66cda212b8ad74aa1e2daf58a8ec0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ndiSetName: 
-  textmp: {fileID: 5969965855166570183}
   labelled: 0
+  connected: 0
+  webRTCConnection: {fileID: 6985653293374303736}
 --- !u!1 &1428053040822821339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2820,7 +2883,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: User bliii
+  m_text: User Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3189,14 +3252,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8866313847998643405}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc66cda212b8ad74aa1e2daf58a8ec0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ndiSetName: 
-  textmp: {fileID: 5013070727644380303}
   labelled: 0
+  connected: 0
+  webRTCConnection: {fileID: 6985653293374303736}
 --- !u!223 &2367306079336335699
 Canvas:
   m_ObjectHideFlags: 0
@@ -4781,14 +4844,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4672199492391934095}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc66cda212b8ad74aa1e2daf58a8ec0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ndiSetName: 
-  textmp: {fileID: 4742963192329435701}
   labelled: 0
+  connected: 0
+  webRTCConnection: {fileID: 6985653293374303736}
 --- !u!224 &6191279078777612326
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5006,11 +5069,16 @@ MonoBehaviour:
   StartStopVideoTransmission: 1
   VideoResolution: {x: 1280, y: 720}
   StreamingCamera: {fileID: 135406155566937053}
-  OptionalPreviewRawImage: {fileID: 0}
+  OptionalPreviewRawImage: {fileID: 557677174}
   ReceivingRawImagesParent: {fileID: 412695062994913776}
   VideoTransmissionReceived:
     m_PersistentCalls:
       m_Calls: []
+  PreassignedCanvasSlots:
+  - {fileID: 6023105527288102987}
+  - {fileID: 2466357547417388519}
+  - {fileID: 1654736530018367896}
+  - {fileID: 2656117052562821323}
   StartStopAudioTransmission: 0
   StreamingAudioSource: {fileID: 9127709894793402627}
   ReceivingAudioSourceParent: {fileID: 0}
@@ -5402,7 +5470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundCanvasColourController
   titleLabel: {fileID: 1547940529776304390}
-  backgroundTexture: {fileID: 4407164880215134708}
+  backgroundTexture: {fileID: 5637890312918141129}
   colorE: {r: 0.8156863, g: 0.1254902, b: 0.5647059, a: 1}
   colorT1: {r: 0.2509804, g: 0.8784314, b: 0.8156863, a: 1}
   colorT2: {r: 0.4980392, g: 1, b: 0, a: 1}
@@ -5574,7 +5642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundCanvasColourController
   titleLabel: {fileID: 1547940529776304390}
-  backgroundTexture: {fileID: 4407164880215134708}
+  backgroundTexture: {fileID: 8325715452594870555}
   colorE: {r: 0.8156863, g: 0.1254902, b: 0.5647059, a: 1}
   colorT1: {r: 0.2509804, g: 0.8784314, b: 0.8156863, a: 1}
   colorT2: {r: 0.4980392, g: 1, b: 0, a: 1}
@@ -5666,6 +5734,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  PreassignedCanvasSlots: []
   StartStopAudioTransmission: 0
   StreamingAudioSource: {fileID: 0}
   ReceivingAudioSourceParent: {fileID: 4316677253361831548}
@@ -5719,7 +5788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundCanvasColourController
   titleLabel: {fileID: 1547940529776304390}
-  backgroundTexture: {fileID: 4407164880215134708}
+  backgroundTexture: {fileID: 5631735924703054952}
   colorE: {r: 0.8156863, g: 0.1254902, b: 0.5647059, a: 1}
   colorT1: {r: 0.2509804, g: 0.8784314, b: 0.8156863, a: 1}
   colorT2: {r: 0.4980392, g: 1, b: 0, a: 1}

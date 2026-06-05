@@ -52,7 +52,7 @@ namespace QuestCameraKit.WebRTC {
                     camera.fieldOfView = customFovValue;
                 }
 
-                Debug.Log($"[CAT] [FOV] Adjusting FOV from {streamingCameras[0].fieldOfView} to {customFovValue}");
+                //Debug.Log($"[CAT] [FOV] Adjusting FOV from {streamingCameras[0].fieldOfView} to {customFovValue}");
             }
 
 #if UNITY_EDITOR

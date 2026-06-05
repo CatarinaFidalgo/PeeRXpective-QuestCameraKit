@@ -1,3 +1,4 @@
+using SimpleWebRTC;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,50 +7,40 @@ using UnityEngine.UI;
 
 public class NDILabelling : MonoBehaviour
 {
-    //public TextMeshPro textMeshPro;
-    // Start is called before the first frame update
-    public string ndiSetName;
-    public TextMeshProUGUI textmp;
+    private TextMeshProUGUI label;
+    //public string clientName;
     public bool labelled = false;
+    public bool connected = false;
+    public WebRTCConnection webRTCConnection;
+
     void Start()
     {
-        //textmp = GetComponent<TextMeshProUGUI>();
-        textmp.text = "Starting NDI...";
+        if (label == null)
+        {
+            label = GetComponentInChildren<TextMeshProUGUI>();
+            Debug.Log("Label component not assigned, found: " + label);
+        }
+        label.text = "Waiting transmission start...";
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if (labelled == false)
-        {
-            textmp.text = "Looking for NDI source...";
+        connected = webRTCConnection.WebRTCConnectionActive;
 
-            if (ndiSetName.con == true)
-            {
-                //textmp.text = ndiSetName.found;
-                textmp.text = GetUserName(ndiSetName.found);
-                labelled = true;
-                Debug.Log("[NDI] Labelled NDI source as: " + ndiSetName.found);
-            }
+        if (labelled == false && connected == true)
+        {
+            label.text = "New Blop Name!";//webRTCConnection.LocalPeerId;
+            labelled = true;
+            Debug.Log("[CAT] Set label of " + this.name + " to: " + label.text);
+            
         }
 
-        if (labelled == true && ndiSetName.con == false)
+        if (labelled == true && connected == false)
         {
-            textmp.text = "Lost connection...";
+            label.text = "Connection dropped...";
             labelled = false;
-            Debug.Log("[NDI] Lost connection to NDI source");
-        }*/
-
-
-
-
-
-        // if (ndiSetName._connected != null && labelled == false)
-        // {
-        //     textmp.text = ndiSetName.found;
-        //     labelled = true;
-        //     Debug.Log("[NDI] Labelled NDI source as: " + ndiSetName.found);
-        // }
+        }
 
     }
 

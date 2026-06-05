@@ -32,6 +32,8 @@ public class ControllerScript : MonoBehaviour
 
     [Tooltip("Optional UI graphic to tint (e.g., a full-rect Image under the Canvas).")]
     public Graphic highlightGraphic;
+    //private Graphic highlightGraphicDefault;
+    private Color defaultColor;
     Collider _col;
     Renderer _rend;
 
@@ -39,13 +41,8 @@ public class ControllerScript : MonoBehaviour
     //public float shiftDistance = 0.2f;
     public Vector3 direction; // = transform.up;  
     private Vector3 fallbackPosition;
-    private bool touching = false;
-
-    //////////////////////////
-    // private Vector3 lastPosition;
-    // private Vector3 lastRotation;
-    // private float lastScale;
-    // private float logThreshold = 0.01f;
+    private bool touchingCanvas = false;
+    private bool pressedButton = false;
 
     private bool wasInteracting = false;
     private bool hasMoved = false;
@@ -58,52 +55,53 @@ public class ControllerScript : MonoBehaviour
 
         // Start in front of the user
         if (sceneCamera != null)
-            //transform.position = sceneCamera.transform.position + sceneCamera.transform.forward * originalDistance;
             if (highlightGraphic)
-                highlightGraphic.color = Color.white;
+                defaultColor = highlightGraphic.color;
 
         fallbackPosition = transform.localPosition; // remember starting position
 
-        ///////////////////////////
-        // lastPosition = transform.position;
-        // lastRotation = transform.rotation.eulerAngles;
-        // lastScale = transform.localScale.x;
     }
 
     void Update()
     {
-        if (rightController == null) return;
-
-        touching = CheckCollision(touching);
-        ///////////
-        //intersect = touching;
-
-
-
-        if (touching)
+        if (rightController == null)
         {
-            //_rend.material.color = Color.blue;
-            if (highlightGraphic) highlightGraphic.color = Color.magenta;
-            intersect = true;
+            Debug.LogWarning("Right controller reference not set.");
+            return;
+        }
+
+        if (highlightGraphic == null)
+        {
+            Debug.LogWarning("Highlight graphic reference not set.");
+        }
+
+        touchingCanvas = CheckCollision(touchingCanvas);
+
+
+        if (touchingCanvas)
+        {
+            //Debug.Log("touchingCanvas object: " + transform.name);
+            highlightGraphic.color = Color.blue;          
 
         }
         else
         {
-            //_rend.material.color = Color.white;
-            if (highlightGraphic) highlightGraphic.color = Color.white;
-            intersect = false;
+            highlightGraphic.color = defaultColor;
+            //highlightGraphic.color = Color.blue;
+        }
 
+        if (OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A))
+        {            
+            //Debug.Log("Pressed a button: (up) " + OVRInput.Get(OVRInput.RawButton.RThumbstickUp) + ", (down) " + OVRInput.Get(OVRInput.RawButton.RThumbstickDown) + ", (A) " + OVRInput.Get(OVRInput.RawButton.A));
+            pressedButton = true;
         }
         
-        // detect if we are currently interacting
-        bool isInteracting = intersect && 
-        (OVRInput.Get(OVRInput.RawButton.RThumbstickUp) ||
-         OVRInput.Get(OVRInput.RawButton.RThumbstickDown) ||
-         OVRInput.Get(OVRInput.RawButton.A));
-
-        if (intersect)
+        if (touchingCanvas & pressedButton)
         {
-            wasInteracting = true; // mark that we have been interacting
+            bool isInteracting = true;
+            //Debug.Log("Manipulating object: " + transform.name);
+
+            wasInteracting = true;
 
             if (OVRInput.Get(OVRInput.RawButton.RThumbstickUp))
             {
@@ -111,9 +109,6 @@ public class ControllerScript : MonoBehaviour
                 transform.localScale += Vector3.one * scaleSpeed * Time.deltaTime;
                 if (transform.localScale.x > 3f) transform.localScale = Vector3.one * 3f; // clamp max size
 
-                //LogTransformChange(string objectName, Vector3 position, Vector3 rotation, float scale)
-                //DataCollection.Instance.LogTransformChange(transform.name, transform.position, transform.rotation.eulerAngles, transform.localScale.x);
-            
                 hasMoved = true;
 
             }
@@ -122,37 +117,24 @@ public class ControllerScript : MonoBehaviour
                 //Debug.Log("Pressing Right Thumbstick Down. Scaling object down.");
                 transform.localScale -= Vector3.one * scaleSpeed * Time.deltaTime;
                 if (transform.localScale.x < 0.25f) transform.localScale = Vector3.one * 0.25f; // clamp min size
-                // DataCollection.Instance.LogTransformChange(transform.name, transform.position, transform.rotation.eulerAngles, transform.localScale.x);
+                
                 hasMoved = true;
             }
-
-            // --- Move & rotate while holding A ---
             else if (OVRInput.Get(OVRInput.RawButton.A))
             {
                 //Debug.Log("Pressing A. Moving object.");
                 transform.position = Vector3.Lerp(transform.position, rightController.position, moveLerpSpeed * Time.deltaTime);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rightController.rotation, moveLerpSpeed * Time.deltaTime);
 
-                //DataCollection.Instance.LogTransformChange(transform.name, transform.position, transform.rotation.eulerAngles, transform.localScale.x);
-
-                //if OVRInput A is released, check for overlaps and resolve
-                // if (OVRInput.GetUp(OVRInput.RawButton.A))
-                // ResolveOverlaps();
-
                 hasMoved = true;
             }
-
-            // current object we are touching goes back to center
-            else if (OVRInput.Get(OVRInput.RawButton.B)) //  if (OVRInput.GetUp(OVRInput.RawButton.A))
+            /*else if (OVRInput.Get(OVRInput.RawButton.B)) 
             {
                 transform.localPosition = fallbackPosition;
                 transform.localRotation = Quaternion.identity;
 
                 hasMoved = true;
-            }
-            
-            //DataCollection.Instance.LogTransformChange(transform.name, transform.position, transform.rotation.eulerAngles, transform.localScale.x);
-            
+            }*/
         }
 
         else if (wasInteracting && hasMoved)
@@ -167,116 +149,40 @@ public class ControllerScript : MonoBehaviour
             wasInteracting = false; // reset interaction flag
             hasMoved = false;
 
-            // // Update last known values
-            // lastPosition = transform.position;
-            // lastRotation = transform.rotation.eulerAngles;
-            // lastScale = transform.localScale.x;
-
-            //DataCollection.Instance.LogTransformChange(transform.name, transform.position, transform.rotation.eulerAngles, transform.localScale.x);
-         
         }
-
-           
 
     }
 
+    /*private void OnTriggerStay(Collider other)
+    {
+        Debug.Log("OnTriggerStay with: " + other.gameObject.name);
+        touchingCanvas = true;
+        *//*// If the collider entering our space is the rightController or part of its hierarchy tree
+        if (other.transform == rightController || other.transform.root == rightController.root)
+        {
+            touchingCanvas = true;
+        }*//*
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        touchingCanvas = false;
+        *//*if (other.transform == rightController || other.transform.root == rightController.root)
+        {
+            touchingCanvas = false;
+        }*//*
+    }*/
 
     bool CheckCollision(bool touching)
     {
-        // --- Overlap test vs controller position (world space) ---
-        touching = _col.bounds.SqrDistance(rightController.position) <= (touchRadius * touchRadius);
+        if (rightController == null) return false;
 
-        // Collider[] hits = Physics.OverlapSphere(rightController.position, touchRadius);
-        // Collider closest = null;
-        // float bestSqr = float.MaxValue;
+        // 1. Calculate the raw distance between the controller and the center of this UI element
+        float distance = Vector3.Distance(transform.position, rightController.position);
 
-        // for (int i = 0; i < hits.Length; i++)
-        // {
-        //     var c = hits[i];
-        //     if (c == null) continue;
-        //     float sqr = (c.bounds.ClosestPoint(rightController.position) - rightController.position).sqrMagnitude;
-        //     if (sqr < bestSqr) { bestSqr = sqr; closest = c; }
-        // }
-
-        // Only consider touching if this object's collider is the closest one
-        //return touching = (closest == _col) && bestSqr <= (touchRadius * touchRadius);
-        return touching;
+        // 2. If the controller is within your touchRadius (e.g., 0.05f for 5cm), return true
+        return distance <= touchRadius;
     }
-    
-    // private bool HasTransformChanged()
-    // {
-    //     // Check movement
-    //     if (Vector3.Distance(transform.position, lastPosition) > logThreshold)
-    //         return true;
-
-    //     // Check rotation
-    //     if (Vector3.Distance(transform.rotation.eulerAngles, lastRotation) > logThreshold)
-    //         return true;
-
-    //     // Check scale
-    //     if (Mathf.Abs(transform.localScale.x - lastScale) > logThreshold)
-    //         return true;
-
-    //     return false;
-    // }
-
-    // void ResolveOverlaps()
-    // {
-    //     // After releasing the object, check for overlaps with other objects and resolve them
-
-    //     if (_col == null)
-    //     {
-    //         Debug.LogWarning("No collider found on the object to resolve overlaps.");
-    //         return;
-    //     }
-
-
-    //     // Collider[] overlappingColliders = Physics.OverlapBox(_col.bounds.center, _col.bounds.extents, transform.rotation);
-    //     // foreach (Collider col in overlappingColliders)
-    //     // {
-    //     //     Debug.Log("Overlapping with: " + col.name);
-
-    //     //     if (col != _col)
-    //     //     {
-    //     //         // Simple resolution: move the object away along the vector between their centers
-    //     //         //Vector3 direction = (transform.position - col.bounds.center).normalized;
-    //     //         //float distance = _col.bounds.extents.magnitude + col.bounds.extents.magnitude;
-    //     //         transform.position = _col.bounds.center + direction * shiftDistance;
-
-    //     //     }
-    //     // }
-
-    //     if (_col == null) return;
-
-    //     // find overlaps with the bounds AABB (cheap). You can change to OverlapBoxNonAlloc if you prefer.
-    //     Collider[] hits = Physics.OverlapBox(_col.bounds.center, _col.bounds.extents, transform.rotation, ~0, QueryTriggerInteraction.Ignore);
-
-    //     foreach (var other in hits)
-    //     {
-    //         if (other == null || other == _col) continue;
-
-    //         // if their centers are very close (or identical), push this object to the side
-    //         Vector3 between = transform.position - other.bounds.center;
-    //         float betweenMag = between.magnitude;
-    //         const float small = 1e-4f;
-
-    //         if (betweenMag < small)
-    //         {
-    //             // centers coincide (or almost). Shift by fixed inspector distance along chosen axis.
-    //             // if (pushDir.sqrMagnitude < 1e-6f) pushDir = Vector3.right; // fallback
-    //             // pushDir = pushDir.normalized;
-
-    //             transform.position += direction * shiftDistance;
-    //         }
-    //         else
-    //         {
-    //             // simple non-precise push-away so bounding-spheres just touch (your earlier idea)
-    //             Vector3 dir = between / betweenMag; // normalized
-    //             float separation = _col.bounds.extents.magnitude + other.bounds.extents.magnitude + 0.01f;
-    //             transform.position = other.bounds.center + dir * separation;
-    //         }
-    //     }
-    // }
 
 
 }
