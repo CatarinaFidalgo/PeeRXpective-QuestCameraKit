@@ -1,4 +1,154 @@
+
 using System;
+using System.IO;
+using UnityEngine;
+
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
+
+public class DataCollection : MonoBehaviour
+{
+    public static DataCollection Instance;
+
+    public enum Role { E, T1, T2, T3, T4 }
+    public Role role;
+    public string pID;
+
+    private string folderPath;
+    private string filePath;
+    private string participantID;
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    void Start()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        {
+            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+        }
+#endif
+
+        participantID = role.ToString() + "_pid" + pID;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        folderPath = Path.Combine("/sdcard/Documents", "DataCollection");
+#else
+        folderPath = Path.Combine(Application.persistentDataPath, "DataCollection");
+#endif
+
+        CreateFolder(folderPath);
+
+        string timestamp = DateTime.Now.ToString("MM_dd_HH_mm");
+        filePath = Path.Combine(folderPath, $"{timestamp}__{participantID}__ScreenOrganizationLogs.csv");
+
+        string[] header =
+        {
+            "TimeStamp",
+            "ParticipantID",
+            "ObjectName",
+            "ChangeType",
+            "PosX",
+            "PosY",
+            "PosZ",
+            "RotX",
+            "RotY",
+            "RotZ",
+            "Scale"
+        };
+
+        CreateFile(filePath, header);
+    }
+
+    public void LogTransformChange(string objectName, string changeType, Vector3 position, Vector3 rotation, float scale)
+    {
+        string[] data =
+        {
+            DateTime.Now.ToString("HH:mm:ss.fff"),
+            participantID,
+            objectName,
+            changeType,
+            position.x.ToString("F2"),
+            position.y.ToString("F2"),
+            position.z.ToString("F2"),
+            rotation.x.ToString("F2"),
+            rotation.y.ToString("F2"),
+            rotation.z.ToString("F2"),
+            scale.ToString("F2")
+        };
+
+        Debug.Log($"Logging Transform Change: {string.Join(", ", data)}");
+        AppendLine(filePath, data);
+    }
+
+    private void CreateFolder(string path)
+    {
+        var folders = path.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+        string currentPath = "";
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        currentPath = "/";
+#else
+        if (folders.Length > 0 && folders[0].Contains(":"))
+        {
+            currentPath = folders[0] + "\\";
+            string[] remainingFolders = new string[folders.Length - 1];
+            Array.Copy(folders, 1, remainingFolders, 0, folders.Length - 1);
+            folders = remainingFolders;
+        }
+        else
+        {
+            currentPath = "/";
+        }
+#endif
+
+        foreach (var folder in folders)
+        {
+            currentPath = Path.Combine(currentPath, folder);
+            if (!Directory.Exists(currentPath))
+            {
+                Directory.CreateDirectory(currentPath);
+            }
+        }
+
+        Debug.Log("Folder created at: " + path);
+    }
+
+    private void CreateFile(string path, string[] header)
+    {
+        if (!File.Exists(path))
+        {
+            using (StreamWriter writer = new StreamWriter(path, false))
+            {
+                writer.WriteLine(string.Join(";", header));
+            }
+        }
+
+        Debug.Log("File created at: " + path);
+    }
+
+    private void AppendLine(string path, string[] data)
+    {
+        using (StreamWriter writer = new StreamWriter(path, true))
+        {
+            writer.WriteLine(string.Join(";", data));
+        }
+    }
+
+    public string GetFilePath()
+    {
+        return filePath;
+    }
+}
+
+
+
+/*using System;
 using System.IO;
 using UnityEngine;
 
@@ -90,7 +240,7 @@ public class DataCollection : MonoBehaviour
     {
         var folders = path.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
-        /***   prev ***/
+        *//***   prev ***//*
         // string currentPath = "/";
 
         // Determine the correct starting root based on the operating system
@@ -114,7 +264,7 @@ public class DataCollection : MonoBehaviour
                 }
         #endif
 
-        /******************/
+        *//******************//*
 
         foreach (var folder in folders)
         {
@@ -150,3 +300,4 @@ public class DataCollection : MonoBehaviour
         }
     }
 }
+*/

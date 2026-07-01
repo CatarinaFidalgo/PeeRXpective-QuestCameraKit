@@ -57,6 +57,7 @@ public class CopyPosition : MonoBehaviour
         {
             DataCollection.Instance.LogTransformChange(
                 transform.name,
+                "Move_t(position/rotation)",
                 transform.position,
                 transform.rotation.eulerAngles,
                 transform.localScale.x

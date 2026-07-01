@@ -1,11 +1,15 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+
 //using Unity.VisualScripting;
 
 //using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+//using static UnityEditor.FilePathAttribute;
 
 // This script is attached to the GameObejct we want to interact with (e.g., a cube)
 // It allows to move, rotate, and scale the object using the Oculus Touch controllers
@@ -46,6 +50,9 @@ public class ControllerScript : MonoBehaviour
 
     private bool wasInteracting = false;
     private bool hasMoved = false;
+
+    public Calibration calibration;
+    private string changeType = ""; 
 
     void Start()
     {
@@ -90,7 +97,7 @@ public class ControllerScript : MonoBehaviour
             //highlightGraphic.color = Color.blue;
         }
 
-        if (OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A))
+        if ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A)) && calibration.isCalibrated)
         {            
             //Debug.Log("Pressed a button: (up) " + OVRInput.Get(OVRInput.RawButton.RThumbstickUp) + ", (down) " + OVRInput.Get(OVRInput.RawButton.RThumbstickDown) + ", (A) " + OVRInput.Get(OVRInput.RawButton.A));
             pressedButton = true;
@@ -98,7 +105,7 @@ public class ControllerScript : MonoBehaviour
         
         if (touchingCanvas & pressedButton)
         {
-            bool isInteracting = true;
+            //bool isInteracting = true;
             //Debug.Log("Manipulating object: " + transform.name);
 
             wasInteracting = true;
@@ -109,6 +116,7 @@ public class ControllerScript : MonoBehaviour
                 transform.localScale += Vector3.one * scaleSpeed * Time.deltaTime;
                 if (transform.localScale.x > 3f) transform.localScale = Vector3.one * 3f; // clamp max size
 
+                changeType = "Scale(up)";
                 hasMoved = true;
 
             }
@@ -117,7 +125,8 @@ public class ControllerScript : MonoBehaviour
                 //Debug.Log("Pressing Right Thumbstick Down. Scaling object down.");
                 transform.localScale -= Vector3.one * scaleSpeed * Time.deltaTime;
                 if (transform.localScale.x < 0.25f) transform.localScale = Vector3.one * 0.25f; // clamp min size
-                
+
+                changeType = "Scale(down)";
                 hasMoved = true;
             }
             else if (OVRInput.Get(OVRInput.RawButton.A))
@@ -126,6 +135,7 @@ public class ControllerScript : MonoBehaviour
                 transform.position = Vector3.Lerp(transform.position, rightController.position, moveLerpSpeed * Time.deltaTime);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rightController.rotation, moveLerpSpeed * Time.deltaTime);
 
+                changeType = "Move_i(position/rotation)";
                 hasMoved = true;
             }
             /*else if (OVRInput.Get(OVRInput.RawButton.B)) 
@@ -137,10 +147,11 @@ public class ControllerScript : MonoBehaviour
             }*/
         }
 
-        else if (wasInteracting && hasMoved)
+        else if (wasInteracting && hasMoved && calibration.isCalibrated)
         {
             DataCollection.Instance.LogTransformChange(
                 transform.name,
+                changeType,
                 transform.position,
                 transform.rotation.eulerAngles,
                 transform.localScale.x
