@@ -5119,7 +5119,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   StartStopVideoTransmission: 0
-  VideoResolution: {x: 462, y: 240}
+  VideoResolution: {x: 320, y: 180}
   StreamingCamera: {fileID: 135406155566937053}
   OptionalPreviewRawImage: {fileID: 0}
   ReceivingRawImagesParent: {fileID: 412695062994913776}
