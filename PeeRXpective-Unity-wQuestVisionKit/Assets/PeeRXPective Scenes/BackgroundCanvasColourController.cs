@@ -44,26 +44,32 @@ public class BackgroundCanvasColourController : MonoBehaviour
         if (lastCheckedText.Contains("E"))
         {
             backgroundTexture.color = colorE;
+            titleLabel.color = colorE;
         }
         else if (lastCheckedText.Contains("T1"))
         {
             backgroundTexture.color = colorT1;
+            titleLabel.color = colorT2;
         }
         else if (lastCheckedText.Contains("T2"))
         {
             backgroundTexture.color = colorT2;
+            titleLabel.color = colorT3;
         }
         else if (lastCheckedText.Contains("T3"))
         {
             backgroundTexture.color = colorT3;
+            titleLabel.color = colorT4;
         }
         else if (lastCheckedText.Contains("T4"))
         {
             backgroundTexture.color = colorT4;
+            titleLabel.color = colorT1;
         }
         else
         {
             backgroundTexture.color = defaultColor;
+            titleLabel.color = Color.white;
         }
     }
 }

@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/PeeRXPective Scenes/peerxpective_Quest_SingleApp_Scene1_Viz3.unity
-    guid: 8c9a741916cc86a4a9aea344e3a1ca9a
+    path: Assets/PeeRXPective Scenes/peerxpective_Quest_SingleApp_Scene1_Viz4.unity
+    guid: 6d2269d0c8566b746ab2d8c807cdbba5
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 1f6e424bb69784f8e8b5df6563fe45de, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using SimpleWebRTC;
 
 #if UNITY_ANDROID
 using UnityEngine.Android;
@@ -17,7 +18,7 @@ public class DataCollection : MonoBehaviour
 
     private string folderPath;
     private string filePath;
-    private string participantID;
+    public string participantID;
 
     void Awake()
     {
@@ -33,6 +34,12 @@ public class DataCollection : MonoBehaviour
             Permission.RequestUserPermission(Permission.ExternalStorageWrite);
         }
 #endif
+        WebRTCConnection webRTC = FindAnyObjectByType<WebRTCConnection>();
+        if (webRTC != null)
+        {
+            webRTC.LocalPeerId = role.ToString();
+            Debug.Log($"[CAT] Successfully PUSHED Role ({role}) to WebRTC!");
+        }
 
         participantID = role.ToString() + "_pid" + pID;
 

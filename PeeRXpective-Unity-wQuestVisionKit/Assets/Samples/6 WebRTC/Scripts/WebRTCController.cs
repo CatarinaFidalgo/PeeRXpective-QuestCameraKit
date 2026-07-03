@@ -34,6 +34,9 @@ namespace QuestCameraKit.WebRTC
             _webRTCConnection = connectionGameObject.GetComponent<WebRTCConnection>();
             _cameraTexture = cameraAccess.GetTexture();
             canvasRawImage.texture = _cameraTexture;
+
+            // --------------------> 
+            _webRTCConnection.SetExternalVideoTexture(_cameraTexture);
         }
 
         private void Update()

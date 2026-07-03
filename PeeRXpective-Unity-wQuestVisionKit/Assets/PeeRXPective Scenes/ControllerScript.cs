@@ -2,21 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-
-//using Unity.VisualScripting;
-
-//using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-//using static UnityEditor.FilePathAttribute;
 
-// This script is attached to the GameObejct we want to interact with (e.g., a cube)
-// It allows to move, rotate, and scale the object using the Oculus Touch controllers
-
-// MAke sure object has a collider component and renderer to detect collisions with the controller
 [RequireComponent(typeof(Collider))]
-//[RequireComponent(typeof(Renderer))]
+
 
 public class ControllerScript : MonoBehaviour
 {
@@ -29,8 +20,7 @@ public class ControllerScript : MonoBehaviour
     public float moveLerpSpeed;          // how fast it follows the controller when moving
     public float scaleSpeed;            // scale units per second while holding trigger
 
-    //public float originalDistance;     // distance from camera at start
-
+    
     [Header("Debug")]
     public bool intersect = false;                  // 1 when controller overlaps, else 0
 
@@ -97,12 +87,14 @@ public class ControllerScript : MonoBehaviour
             //highlightGraphic.color = Color.blue;
         }
 
-        if ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A)) && calibration.isCalibrated)
+        pressedButton = ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A) || OVRInput.Get(OVRInput.RawButton.B)) && calibration.isCalibrated);
+
+        /*if ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A) || OVRInput.Get(OVRInput.RawButton.B)) && calibration.isCalibrated)
         {            
-            //Debug.Log("Pressed a button: (up) " + OVRInput.Get(OVRInput.RawButton.RThumbstickUp) + ", (down) " + OVRInput.Get(OVRInput.RawButton.RThumbstickDown) + ", (A) " + OVRInput.Get(OVRInput.RawButton.A));
-            pressedButton = true;
-        }
-        
+           //Debug.Log("Pressed a button: (up) " + OVRInput.Get(OVRInput.RawButton.RThumbstickUp) + ", (down) " + OVRInput.Get(OVRInput.RawButton.RThumbstickDown) + ", (A) " + OVRInput.Get(OVRInput.RawButton.A));
+           pressedButton = true;
+        }*/
+
         if (touchingCanvas & pressedButton)
         {
             //bool isInteracting = true;
@@ -138,22 +130,26 @@ public class ControllerScript : MonoBehaviour
                 changeType = "Move_i(position/rotation)";
                 hasMoved = true;
             }
-            /*else if (OVRInput.Get(OVRInput.RawButton.B)) 
+            else if (OVRInput.Get(OVRInput.RawButton.B))
             {
                 transform.localPosition = fallbackPosition;
                 transform.localRotation = Quaternion.identity;
 
                 hasMoved = true;
-            }*/
+            }
         }
 
         else if (wasInteracting && hasMoved && calibration.isCalibrated)
         {
+            // Convert the world coordinates to calibrated referential
+            Vector3 calibratedPos = calibration.WorldToTablePosition(transform.position);
+            Vector3 calibratedRot = calibration.WorldToTableRotation(transform.rotation).eulerAngles;
+
             DataCollection.Instance.LogTransformChange(
                 transform.name,
                 changeType,
-                transform.position,
-                transform.rotation.eulerAngles,
+                calibratedPos,
+                calibratedRot,
                 transform.localScale.x
             );
 
