@@ -5092,8 +5092,8 @@ MonoBehaviour:
   IsVideoAudioReceiver: 1
   RandomUniquePeerId: 1
   ShowLogs: 1
-  ShowDataChannelLogs: 1
-  maxBitrate: 1800000
+  ShowDataChannelLogs: 0
+  maxBitrate: 1000000
   maxFramerate: 25
   UseImmersiveSetup: 0
   experimentalSupportFor6DOF: 0
@@ -5121,7 +5121,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   StartStopVideoTransmission: 0
-  VideoResolution: {x: 640, y: 480}
+  VideoResolution: {x: 640, y: 360}
   StreamingCamera: {fileID: 135406155566937053}
   OptionalPreviewRawImage: {fileID: 0}
   ReceivingRawImagesParent: {fileID: 412695062994913776}

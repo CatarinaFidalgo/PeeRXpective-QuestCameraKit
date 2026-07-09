@@ -11,6 +11,7 @@ Library: C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQu
 --float-mode=Fast
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.8f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Library\Burst
 --output=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -82,6 +83,7 @@ Library: C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQu
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.8f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Library\Burst
 --output=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -99,6 +101,7 @@ Library: C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQu
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.8f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Library\Burst
 --output=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -139,6 +142,7 @@ Library: C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQu
 --float-mode=Fast
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.8f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Library\Burst
 --output=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -156,6 +160,7 @@ Library: C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQu
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.8f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Library\Burst
 --output=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -272,6 +277,7 @@ Library: C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQu
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.8f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Library\Burst
 --output=C:\Users\Legion\Documents\GitHub\PeeRXpectiveQCK\PeeRXpective-Unity-wQuestVisionKit\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
