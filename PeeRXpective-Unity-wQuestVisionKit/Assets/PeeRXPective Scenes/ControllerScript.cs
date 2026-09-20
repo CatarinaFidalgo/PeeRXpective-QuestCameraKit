@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -89,7 +90,9 @@ public class ControllerScript : MonoBehaviour
 
         pressedButton = ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A) || OVRInput.Get(OVRInput.RawButton.B)) && calibration.isCalibrated);
 
-        /*if ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A) || OVRInput.Get(OVRInput.RawButton.B)) && calibration.isCalibrated)
+        /*if ((OVRInput.Get(OVRInput.RawButton.RThumbstickUp) || OVRInput.Get(OVRInput.RawButton.RThumbstickDown) || OVRInput.Get(OVRInput.RawButton.A) || OVRInput.Get(OVRInput.RawButton.B)) && calibrat
+         * 
+         * ion.isCalibrated)
         {            
            //Debug.Log("Pressed a button: (up) " + OVRInput.Get(OVRInput.RawButton.RThumbstickUp) + ", (down) " + OVRInput.Get(OVRInput.RawButton.RThumbstickDown) + ", (A) " + OVRInput.Get(OVRInput.RawButton.A));
            pressedButton = true;
@@ -146,7 +149,7 @@ public class ControllerScript : MonoBehaviour
             Vector3 calibratedRot = calibration.WorldToTableRotation(transform.rotation).eulerAngles;
 
             DataCollection.Instance.LogTransformChange(
-                transform.name,
+                transform.GetChild(2).GetComponent<TextMeshProUGUI>().text,
                 changeType,
                 calibratedPos,
                 calibratedRot,

@@ -73,15 +73,16 @@ public class PoseDataCollection : MonoBehaviour
         }
 #endif
 
-        participantID = data.role.ToString() + "_pid" + data.pID;
+        //participantID = data.role.ToString() + "_pid" + data.pID;
+        participantID = data.participantID;
 
         // Fill in Tracked Item IDs 
         webRTC = FindAnyObjectByType<WebRTCConnection>();
         trackedSubject.id = participantID;
-        trackedScreens[0].id = webRTC.PreassignedLabelSlots[0].ToString();
-        trackedScreens[1].id = webRTC.PreassignedLabelSlots[1].ToString();
-        trackedScreens[2].id = webRTC.PreassignedLabelSlots[2].ToString();
-        trackedScreens[3].id = webRTC.PreassignedLabelSlots[3].ToString();
+        trackedScreens[0].id = webRTC.PreassignedLabelSlots[0].text;
+        trackedScreens[1].id = webRTC.PreassignedLabelSlots[1].text;
+        trackedScreens[2].id = webRTC.PreassignedLabelSlots[2].text;
+        trackedScreens[3].id = webRTC.PreassignedLabelSlots[3].text;
 
         // Launch the watcher to update IDs when WebRTC changes the UI
         StartCoroutine(UpdateIdsOnConnection());
@@ -94,7 +95,7 @@ public class PoseDataCollection : MonoBehaviour
 
         CreateFolder(folderPath);
 
-        string timestamp = DateTime.Now.ToString("MM_dd_HH_mm");
+        string timestamp = DateTime.Now.ToString("ddd_MM_dd_HH_mm");
         filePath = Path.Combine(folderPath, $"{timestamp}__{participantID}__PoseLogs.csv");
 
         if (autoStart)
@@ -324,7 +325,7 @@ public class PoseDataCollection : MonoBehaviour
         WriteRow(objectName, objectType, localPos, localRot);
     }
 
-    private void WriteRow(string objectName, string objectType, Vector3 pos, Quaternion rot)
+    /*private void WriteRow(string objectName, string objectType, Vector3 pos, Quaternion rot)
     {
         string[] data =
         {
@@ -342,6 +343,30 @@ public class PoseDataCollection : MonoBehaviour
         };
 
         AppendLine(filePath, data);
+    }*/
+
+    private void WriteRow(string objectName, string objectType, Vector3 pos, Quaternion rot)
+    {
+        string[] rowData =
+        {
+        DateTime.Now.ToString("HH:mm:ss.fff"),
+        participantID,
+        objectName,
+        objectType,
+        pos.x.ToString("F6", Invariant),
+        pos.y.ToString("F6", Invariant),
+        pos.z.ToString("F6", Invariant),
+        rot.x.ToString("F6", Invariant),
+        rot.y.ToString("F6", Invariant),
+        rot.z.ToString("F6", Invariant),
+        rot.w.ToString("F6", Invariant)
+    };
+
+        // Use the stream that is already open and locked for this script
+        if (writer != null)
+        {
+            writer.WriteLine(string.Join(";", rowData));
+        }
     }
 
     private void CreateFolder(string path)

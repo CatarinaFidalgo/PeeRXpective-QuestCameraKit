@@ -20,10 +20,19 @@ public class DataCollection : MonoBehaviour
     private string filePath;
     public string participantID;
 
+    /*void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }*/
+
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        // Generate this immediately so other scripts can safely read it in Start()
+        participantID = role.ToString() + "_pID_" + pID;
     }
 
     void Start()
@@ -41,7 +50,7 @@ public class DataCollection : MonoBehaviour
             Debug.Log($"[CAT] Successfully PUSHED Role ({role}) to WebRTC!");
         }
 
-        participantID = role.ToString() + "_pid" + pID;
+        //participantID = role.ToString() + "_pID_" + pID;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
         folderPath = Path.Combine("/sdcard/Documents", "DataCollection");
@@ -51,7 +60,7 @@ public class DataCollection : MonoBehaviour
 
         CreateFolder(folderPath);
 
-        string timestamp = DateTime.Now.ToString("MM_dd_HH_mm");
+        string timestamp = DateTime.Now.ToString("ddd_MM_dd_HH_mm");
         filePath = Path.Combine(folderPath, $"{timestamp}__{participantID}__ScreenOrganizationLogs.csv");
 
         string[] header =
